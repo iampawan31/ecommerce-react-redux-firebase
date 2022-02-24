@@ -1,67 +1,51 @@
-import React from 'react'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { auth, logInWithEmailAndPassword } from '../../firebase-config'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 const Login = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, loading, error] = useAuthState(auth)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (loading) {
+      // maybe trigger a loading screen
+      return
+    }
+    if (user) navigate('/dashboard')
+  }, [user, loading])
+
   return (
     <div className="flex justify-center items-center h-full min-h-screen">
       <div className="bg-gray-300 rounded shadow border h-80 border-emerald-300 w-full max-w-lg px-8 py-6">
         <div className="text-3xl text-center pb-4">Login</div>
-        <Formik
-          initialValues={{ email: '', password: '' }}
-          validate={(values) => {
-            const errors = {}
-            if (!values.email) {
-              errors.email = 'Required'
-            } else if (
-              !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-            ) {
-              errors.email = 'Invalid email address'
-            }
-            return errors
-          }}
-          onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2))
-              setSubmitting(false)
-            }, 400)
-          }}
+        {error && <div className="bg-red-500">{error}</div>}
+        <input
+          className="block w-full border px-4 py-2 my-2 rounded border-emerald-300"
+          type="email"
+          name="email"
+          placeholder="email"
+          autoComplete="off"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+        />
+        <input
+          className="block w-full border px-4 py-2 my-2 rounded border-emerald-300"
+          type="password"
+          name="password"
+          placeholder="password"
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+        />
+        <button
+          className="w-full bg-emerald-400 py-2 px-4 rounded"
+          type="submit"
+          onClick={() => logInWithEmailAndPassword(email, password)}
         >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-            /* and other goodies */
-          }) => (
-            <Form>
-              <Field
-                className="block w-full border px-4 py-2 my-2 rounded border-emerald-300"
-                type="email"
-                name="email"
-                placeholder="email"
-                autocomplete="off"
-              />
-              <ErrorMessage name="email" component="div" />
-              <Field
-                className="block w-full border px-4 py-2 my-2 rounded border-emerald-300"
-                type="password"
-                name="password"
-                placeholder="password"
-              />
-              <ErrorMessage name="password" component="div" />
-              <button
-                className="w-full bg-emerald-400 py-2 px-4 rounded"
-                type="submit"
-                disabled={isSubmitting}
-              >
-                Submit
-              </button>
-            </Form>
-          )}
-        </Formik>
+          Submit
+        </button>
       </div>
     </div>
   )
