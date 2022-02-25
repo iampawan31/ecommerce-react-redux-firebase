@@ -36,6 +36,7 @@ const App = () => {
       const q = query(collection(db, 'users'), where('uid', '==', user?.uid))
       const doc = await getDocs(q)
       const data = doc.docs[0].data()
+      console.log(data, 39)
       setName(data.name)
       completeLoader()
     } catch (err) {
