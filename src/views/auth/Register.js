@@ -3,7 +3,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { useNavigate } from 'react-router-dom'
 import { auth, registerWithEmailAndPassword } from '../../firebase-config'
 
-const Register = () => {
+const Register = ({ startLoader, completeLoader }) => {
   const [email, setEmail] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -12,10 +12,16 @@ const Register = () => {
 
   const navigate = useNavigate()
 
-  const register = () => {
+  const register = async () => {
     if (!firstName || !lastName) alert('Please enter name')
-    registerWithEmailAndPassword(firstName, lastName, email, password)
+    await registerWithEmailAndPassword(firstName, lastName, email, password)
   }
+
+  useEffect(() => {
+    startLoader()
+    completeLoader()
+  })
+
   useEffect(() => {
     if (loading) return
     if (user) navigate('/dashboard')

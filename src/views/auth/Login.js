@@ -3,11 +3,17 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { useNavigate } from 'react-router-dom'
 import { auth, logInWithEmailAndPassword } from '../../firebase-config'
 
-const Login = () => {
+const Login = ({ startLoader, completeLoader }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [user, loading, error] = useAuthState(auth)
   const navigate = useNavigate()
+
+  const processLogin = async () => {
+    startLoader()
+    await logInWithEmailAndPassword(email, password)
+    completeLoader()
+  }
 
   useEffect(() => {
     if (loading) {
@@ -15,6 +21,7 @@ const Login = () => {
       return
     }
     if (user) navigate('/dashboard')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, loading])
 
   return (
@@ -42,7 +49,7 @@ const Login = () => {
         <button
           className="w-full bg-emerald-400 py-2 px-4 rounded"
           type="submit"
-          onClick={() => logInWithEmailAndPassword(email, password)}
+          onClick={processLogin}
         >
           Submit
         </button>
