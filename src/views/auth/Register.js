@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { auth, registerWithEmailAndPassword } from '../../firebase-config'
+import React, { useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
+import { useNavigate } from 'react-router-dom'
+import { auth, registerWithEmailAndPassword } from '../../firebase-config'
 
 const Register = () => {
   const [email, setEmail] = useState('')

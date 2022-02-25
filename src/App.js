@@ -1,14 +1,14 @@
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import Footer from './components/Footer'
 import Header from './components/Header'
-import { Routes, Route, useNavigate } from 'react-router-dom'
-import Home from './views/Home'
+import { auth, db } from './firebase-config'
 import Login from './views/auth/Login'
 import Register from './views/auth/Register'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth, db } from './firebase-config'
-import { query, collection, getDocs, where } from 'firebase/firestore'
 import Dashboard from './views/Dashboard'
+import Home from './views/Home'
 
 const App = () => {
   const [user, loading, error] = useAuthState(auth)
